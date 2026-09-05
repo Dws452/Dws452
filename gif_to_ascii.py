@@ -1,149 +1,190 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
+# ==========================================
+# НАСТРОЙКИ
+# ==========================================
 
-#НАСТРОЙКИ--
+# Название твоей GIF
 INPUT_FILE = "tenor.gif"
+
+# Название готовой ASCII-анимации
 OUTPUT_FILE = "ascii.gif"
 
+# Ширина ASCII
 WIDTH = 100
 
-ASCII_CHARS = "@%#*+=-:. "
+# Символы от тёмного к светлому
+ASCII_CHARS = " .:-=+*#%@"
 
-#Размер символов--
-FONT_SIZE = 10
+# Коррекция высоты символов
+CHAR_ASPECT = 0.45
+
+# Размер шрифта
+FONT_SIZE = 12
 
 
-#ПРЕОБРАЗОВАНИЕ КАДРА В ASCII--
+# ==========================================
+# ШРИФТ
+# ==========================================
 
+try:
+    FONT = ImageFont.truetype(
+        "DejaVuSansMono.ttf",
+        FONT_SIZE
+    )
+except:
+    FONT = ImageFont.load_default()
+
+
+# ==========================================
+# КАДР GIF → ASCII
+# ==========================================
 
 def frame_to_ascii(frame):
 
+    # Переводим изображение в оттенки серого
     gray = frame.convert("L")
 
+    original_width, original_height = gray.size
 
-    aspect_ratio = gray.height / gray.width
+    # Сохраняем пропорции
+    aspect_ratio = original_height / original_width
 
-    height = max(
-        1,
-        int(WIDTH * aspect_ratio * 0.5)
+    height = int(
+        WIDTH * aspect_ratio * CHAR_ASPECT
     )
 
+    height = max(1, height)
 
-    gray = gray.resize((WIDTH, height))
+    # Изменяем размер
+    gray = gray.resize(
+        (WIDTH, height),
+        Image.Resampling.LANCZOS
+    )
 
     pixels = np.array(gray)
 
+    # Яркость → ASCII-символ
     indices = (
-        pixels / 255 * (len(ASCII_CHARS) - 1)
+        pixels / 255 *
+        (len(ASCII_CHARS) - 1)
     ).astype(int)
 
-    ascii_lines = []
+    lines = []
 
     for row in indices:
+
         line = "".join(
             ASCII_CHARS[index]
             for index in row
         )
 
-        ascii_lines.append(line)
+        lines.append(line)
 
-    return ascii_lines
-
-
-
-#СОЗДАНИЕ ASCII-КАДРА--
+    return lines
 
 
-def create_ascii_image(lines):
+# ==========================================
+# ASCII → КАРТИНКА
+# ==========================================
 
+def create_ascii_frame(lines):
 
-    char_width = 7
-    char_height = 10
+    # Размер одного символа
+    char_width = 8
+    char_height = 14
 
     width = WIDTH * char_width
     height = len(lines) * char_height
 
-
+    # Чёрный фон
     image = Image.new(
         "RGB",
         (width, height),
-        "black"
+        (0, 0, 0)
     )
 
     draw = ImageDraw.Draw(image)
 
-
-    font = ImageFont.load_default()
-
+    # Рисуем ASCII
     for y, line in enumerate(lines):
 
         draw.text(
-            (2, y * char_height),
+            (0, y * char_height),
             line,
-            fill="white",
-            font=font
+            font=FONT,
+            fill=(255, 255, 255)
         )
 
     return image
 
 
-#ОСНОВНАЯ ПРОГРАММА--
+# ==========================================
+# ОТКРЫВАЕМ ТВОЮ GIF
+# ==========================================
+
+print("🎞️ Открываю:", INPUT_FILE)
+
+gif = Image.open(INPUT_FILE)
+
+print("🎬 Количество кадров:", gif.n_frames)
+
+# Скорость оригинальной GIF
+duration = gif.info.get("duration", 100)
+
+frames = []
 
 
-def main():
+# ==========================================
+# ОБРАБОТКА ВСЕХ КАДРОВ
+# ==========================================
 
-    print("Открываю GIF:", INPUT_FILE)
+for frame_number in range(gif.n_frames):
 
-    gif = Image.open(INPUT_FILE)
-
-    frames = []
-
-    duration = gif.info.get("duration", 100)
-
-    print("Количество кадров:", gif.n_frames)
-
-
-    for frame_number in range(gif.n_frames):
-
-        print(
-            f"Обрабатываю кадр "
-            f"{frame_number + 1}/{gif.n_frames}"
-        )
-
-        gif.seek(frame_number)
-
-        frame = gif.convert("RGB")
-
-        ascii_lines = frame_to_ascii(frame)
-
-        ascii_image = create_ascii_image(
-            ascii_lines
-        )
-
-        frames.append(ascii_image)
-
-    if not frames:
-        print("Ошибка: кадров не найдено.")
-        return
-
-
-    print("Сохраняю:", OUTPUT_FILE)
-
-    frames[0].save(
-        OUTPUT_FILE,
-        save_all=True,
-        append_images=frames[1:],
-        duration=duration,
-        loop=0
+    print(
+        f"⚙️ Обрабатываю кадр "
+        f"{frame_number + 1}/{gif.n_frames}"
     )
 
-    print()
-    print("================================")
-    print("ГОТОВО!")
-    print("Создан файл:", OUTPUT_FILE)
-    print("================================")
+    gif.seek(frame_number)
+
+    frame = gif.convert("RGB")
+
+    ascii_lines = frame_to_ascii(frame)
+
+    ascii_frame = create_ascii_frame(
+        ascii_lines
+    )
+
+    frames.append(ascii_frame)
 
 
-if __name__ == "__main__":
-    main()
+# ==========================================
+# СОХРАНЯЕМ ASCII GIF
+# ==========================================
+
+if not frames:
+    raise RuntimeError(
+        "Не удалось создать кадры!"
+    )
+
+print("💾 Сохраняю ASCII-анимацию...")
+
+frames[0].save(
+    OUTPUT_FILE,
+    save_all=True,
+    append_images=frames[1:],
+    duration=duration,
+    loop=0,
+    optimize=False
+)
+
+print()
+print("================================")
+print("✅ ГОТОВО!")
+print("================================")
+print("Исходная GIF:", INPUT_FILE)
+print("Результат:", OUTPUT_FILE)
+print("Кадров:", len(frames))
+print("================================")
