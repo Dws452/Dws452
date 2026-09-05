@@ -1,30 +1,27 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
-# ==========================================
-# НАСТРОЙКИ
-# ==========================================
 
-INPUT_FILE = "загрузка.gif"
+#НАСТРОЙКИ--
+INPUT_FILE = "tenor.gif"
 OUTPUT_FILE = "ascii.gif"
 
-WIDTH = 100
+WIDTH = 150
 
-# От тёмного к светлому
 ASCII_CHARS = "@%#*+=-:. "
 
-# Размер символов
+#Размер символов--
 FONT_SIZE = 10
 
-# ==========================================
-# ПРЕОБРАЗОВАНИЕ КАДРА В ASCII
-# ==========================================
+
+#ПРЕОБРАЗОВАНИЕ КАДРА В ASCII--
+
 
 def frame_to_ascii(frame):
-    # Переводим кадр в оттенки серого
+
     gray = frame.convert("L")
 
-    # Сохраняем пропорции
+
     aspect_ratio = gray.height / gray.width
 
     height = max(
@@ -32,12 +29,11 @@ def frame_to_ascii(frame):
         int(WIDTH * aspect_ratio * 0.5)
     )
 
-    # Уменьшаем изображение
+
     gray = gray.resize((WIDTH, height))
 
     pixels = np.array(gray)
 
-    # Преобразуем яркость в символы
     indices = (
         pixels / 255 * (len(ASCII_CHARS) - 1)
     ).astype(int)
@@ -55,20 +51,20 @@ def frame_to_ascii(frame):
     return ascii_lines
 
 
-# ==========================================
-# СОЗДАНИЕ ASCII-КАДРА
-# ==========================================
+
+#СОЗДАНИЕ ASCII-КАДРА--
+
 
 def create_ascii_image(lines):
 
-    # Размер изображения
+
     char_width = 7
     char_height = 10
 
     width = WIDTH * char_width
     height = len(lines) * char_height
 
-    # Чёрный фон
+
     image = Image.new(
         "RGB",
         (width, height),
@@ -77,10 +73,9 @@ def create_ascii_image(lines):
 
     draw = ImageDraw.Draw(image)
 
-    # Стандартный шрифт
+
     font = ImageFont.load_default()
 
-    # Рисуем ASCII
     for y, line in enumerate(lines):
 
         draw.text(
@@ -93,9 +88,8 @@ def create_ascii_image(lines):
     return image
 
 
-# ==========================================
-# ОСНОВНАЯ ПРОГРАММА
-# ==========================================
+#ОСНОВНАЯ ПРОГРАММА--
+
 
 def main():
 
@@ -109,7 +103,7 @@ def main():
 
     print("Количество кадров:", gif.n_frames)
 
-    # Обрабатываем каждый кадр
+
     for frame_number in range(gif.n_frames):
 
         print(
@@ -133,7 +127,7 @@ def main():
         print("Ошибка: кадров не найдено.")
         return
 
-    # Сохраняем анимацию
+
     print("Сохраняю:", OUTPUT_FILE)
 
     frames[0].save(
