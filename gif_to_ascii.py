@@ -6,7 +6,7 @@ import numpy as np
 INPUT_FILE = "tenor.gif"
 OUTPUT_FILE = "ascii.gif"
 
-WIDTH = 150
+WIDTH = 100
 
 ASCII_CHARS = "@%#*+=-:. "
 
