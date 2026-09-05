@@ -1,6 +1,6 @@
-<h1 align="center">👋 Привет! Я [ТВОЁ ИМЯ]</h1>
+<h1 align="center">👋 Привет! я-Dws452 </h1>
 
-<h2 align="center">🛠️ Языки программирования</h2>
+<h2 align="center">🛠️ Языки программирования которые я изучаю</h2>
 
 <p align="center">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="60" alt="Python">
