@@ -33,7 +33,7 @@
   </a>
 </p>
 
-<h2 align="center">🐱 My GitHub Activity 🐱</h2>
+<h2 align="center"> Моя активность github</h2>
 
 <p align="center">
   <img src="./cat.gif" width="900" alt="Pixel Cat contribution graph">
