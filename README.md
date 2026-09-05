@@ -27,7 +27,7 @@
   <img src="./cat.gif" width="900" alt="Pixel Cat contribution graph">
 </p>
 
-<h2 align="center">📫 Где со мной связаться</h2>
+<h2 align="center"> где со мной связаться</h2>
 
 <p align="center">
   <a href="https://t.me/H_A_H_A_H_A_H_A_H_O">
