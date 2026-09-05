@@ -1,3 +1,11 @@
+<p align="center">
+  <img
+    src="https://raw.githubusercontent.com/Dws452/Dws452/main/%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B0.gif"
+    width="700"
+    alt="GIF"
+  >
+</p>
+
 <h1 align="center">👋 Привет! я-Dws452 </h1>
 
 <h2 align="center">🛠️ Языки программирования которые я изучаю</h2>
