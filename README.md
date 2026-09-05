@@ -21,12 +21,6 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" width="60" alt="C++">
 </p>
 
-<h2 align="center">🐱 My GitHub Activity 🐱</h2>
-
-<p align="center">
-  <img src="./cat.gif" width="900" alt="Pixel Cat contribution graph">
-</p>
-
 <h2 align="center"> где со мной связаться</h2>
 
 <p align="center">
@@ -39,3 +33,8 @@
   </a>
 </p>
 
+<h2 align="center">🐱 My GitHub Activity 🐱</h2>
+
+<p align="center">
+  <img src="./cat.gif" width="900" alt="Pixel Cat contribution graph">
+</p>
