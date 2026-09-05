@@ -12,7 +12,7 @@
 
 
 
-<h2 align="center">🛠️ Языки программирования которые я изучаю</h2>
+<h2 align="center">🛠️ Языки программирования которые я изучаю🛠️</h2>
 
 <p align="center">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="60" alt="Python">
