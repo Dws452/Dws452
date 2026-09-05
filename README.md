@@ -20,3 +20,14 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="60" alt="JavaScript">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" width="60" alt="C++">
 </p>
+
+
+<h2 align="center">👾 My Contributions</h2>
+
+<p align="center">
+  <img
+    src="https://raw.githubusercontent.com/Dws452/Dws452/output/pacman-contribution-graph.svg"
+    width="900"
+    alt="Pac-Man contribution graph"
+  >
+</p>
