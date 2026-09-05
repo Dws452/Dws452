@@ -27,11 +27,15 @@
   <img src="./cat.gif" width="900" alt="Pixel Cat contribution graph">
 </p>
 
-<h2 align="center"> где со мной связаться-</h2>
+<h2 align="center">📫 Где со мной связаться</h2>
 
 <p align="center">
   <a href="https://t.me/H_A_H_A_H_A_H_A_H_O">
-    💬 Telegram
+    <img
+      src="https://cdn.simpleicons.org/telegram/26A5E4"
+      width="50"
+      alt="Telegram"
+    >
   </a>
 </p>
 
