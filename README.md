@@ -1,3 +1,5 @@
+
+<h1 align="center">👋 Привет! я-Dws452👋 </h1>
 <h2 align="center"></h2>
 
 <p align="center">
@@ -8,7 +10,7 @@
   >
 </p>
 
-<h1 align="center">👋 Привет! я-Dws452 </h1>
+
 
 <h2 align="center">🛠️ Языки программирования которые я изучаю</h2>
 
