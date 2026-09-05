@@ -1,4 +1,12 @@
+<h2 align="center">🎞️ ASCII Animation</h2>
 
+<p align="center">
+  <img
+    src="./ascii.gif"
+    width="800"
+    alt="ASCII Animation"
+  >
+</p>
 
 <h1 align="center">👋 Привет! я-Dws452 </h1>
 
