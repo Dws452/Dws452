@@ -12,7 +12,7 @@ INPUT_FILE = "tenor.gif"
 OUTPUT_FILE = "ascii.gif"
 
 # Ширина ASCII
-WIDTH = 125
+WIDTH = 150
 
 # Символы от тёмного к светлому
 ASCII_CHARS = " .:-=+*#%@"
