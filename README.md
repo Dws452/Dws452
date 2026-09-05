@@ -1,4 +1,4 @@
-<h2 align="center">🎞️ ASCII Animation</h2>
+<h2 align="center"></h2>
 
 <p align="center">
   <img
