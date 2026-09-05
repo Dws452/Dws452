@@ -3,7 +3,7 @@ name: 🎞️ GIF to ASCII
 on:
   push:
     paths:
-      - "загрузка.gif"
+      - "tenor.gif"
       - "gif_to_ascii.py"
       - ".github/workflows/ascii.yml"
 
