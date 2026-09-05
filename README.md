@@ -21,13 +21,9 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" width="60" alt="C++">
 </p>
 
-<h2 align="center">👾 My Contributions</h2>
+<h2 align="center">🐱 My GitHub Activity 🐱</h2>
 
 <p align="center">
-  <img
-    src="./pacman.gif"
-    width="900"
-    alt="Pac-Man contribution graph"
-  >
+  <img src="./cat.gif" width="900" alt="Pixel Cat contribution graph">
 </p>
 
