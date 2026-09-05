@@ -1,26 +1,25 @@
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageSequence
 import numpy as np
+
 
 # ==========================================
 # НАСТРОЙКИ
 # ==========================================
 
-# Название твоей GIF
 INPUT_FILE = "tenor.gif"
-
-# Название готовой ASCII-анимации
 OUTPUT_FILE = "ascii.gif"
 
-# Ширина ASCII
-WIDTH = 125
+# Количество ASCII-символов по ширине
+WIDTH = 100
 
 # Символы от тёмного к светлому
 ASCII_CHARS = " .:-=+*#%@"
 
-# Коррекция высоты символов
-CHAR_ASPECT = 0.45
+# Исправление пропорций символов
+# Подбираем так, чтобы изображение не растягивалось
+CHAR_RATIO = 0.50
 
-# Размер шрифта
+# Размер текста
 FONT_SIZE = 12
 
 
@@ -38,46 +37,49 @@ except:
 
 
 # ==========================================
-# КАДР GIF → ASCII
+# ASCII КАДР
 # ==========================================
 
-def frame_to_ascii(frame):
+def convert_to_ascii(frame):
 
-    # Переводим изображение в оттенки серого
-    gray = frame.convert("L")
+    # Переводим в RGB
+    frame = frame.convert("RGB")
 
-    original_width, original_height = gray.size
+    original_width, original_height = frame.size
 
-    # Сохраняем пропорции
-    aspect_ratio = original_height / original_width
+    # Сохраняем исходные пропорции
+    aspect = original_height / original_width
 
-    height = int(
-        WIDTH * aspect_ratio * CHAR_ASPECT
+    # Высота ASCII
+    ascii_height = max(
+        1,
+        int(WIDTH * aspect * CHAR_RATIO)
     )
 
-    height = max(1, height)
-
     # Изменяем размер
-    gray = gray.resize(
-        (WIDTH, height),
+    frame = frame.resize(
+        (WIDTH, ascii_height),
         Image.Resampling.LANCZOS
     )
 
-    pixels = np.array(gray)
+    # В оттенки серого
+    gray = frame.convert("L")
 
-    # Яркость → ASCII-символ
-    indices = (
+    pixels = np.asarray(gray)
+
+    # Яркость → индекс символа
+    indexes = (
         pixels / 255 *
         (len(ASCII_CHARS) - 1)
-    ).astype(int)
+    ).astype(np.int32)
 
     lines = []
 
-    for row in indices:
+    for row in indexes:
 
         line = "".join(
-            ASCII_CHARS[index]
-            for index in row
+            ASCII_CHARS[int(i)]
+            for i in row
         )
 
         lines.append(line)
@@ -86,32 +88,35 @@ def frame_to_ascii(frame):
 
 
 # ==========================================
-# ASCII → КАРТИНКА
+# ASCII → ИЗОБРАЖЕНИЕ
 # ==========================================
 
-def create_ascii_frame(lines):
+def make_ascii_image(lines):
 
-    # Размер одного символа
-    char_width = 8
-    char_height = 14
+    # Фиксированный размер символа
+    CHAR_WIDTH = 8
+    CHAR_HEIGHT = 14
 
-    width = WIDTH * char_width
-    height = len(lines) * char_height
+    image_width = WIDTH * CHAR_WIDTH
+    image_height = len(lines) * CHAR_HEIGHT
 
-    # Чёрный фон
+    # ОДИНАКОВЫЙ размер у каждого кадра
     image = Image.new(
         "RGB",
-        (width, height),
+        (image_width, image_height),
         (0, 0, 0)
     )
 
     draw = ImageDraw.Draw(image)
 
-    # Рисуем ASCII
+    # Рисуем каждую строку отдельно
     for y, line in enumerate(lines):
 
         draw.text(
-            (0, y * char_height),
+            (
+                0,
+                y * CHAR_HEIGHT
+            ),
             line,
             font=FONT,
             fill=(255, 255, 255)
@@ -121,55 +126,79 @@ def create_ascii_frame(lines):
 
 
 # ==========================================
-# ОТКРЫВАЕМ ТВОЮ GIF
+# ОТКРЫВАЕМ GIF
 # ==========================================
 
-print("🎞️ Открываю:", INPUT_FILE)
+print("================================")
+print("🎞️ GIF → ASCII")
+print("================================")
 
 gif = Image.open(INPUT_FILE)
 
-print("🎬 Количество кадров:", gif.n_frames)
+print(f"📁 Файл: {INPUT_FILE}")
+print(f"🎬 Кадров: {gif.n_frames}")
 
-# Скорость оригинальной GIF
-duration = gif.info.get("duration", 100)
+
+# ==========================================
+# FPS / СКОРОСТЬ
+# ==========================================
+
+duration = gif.info.get(
+    "duration",
+    100
+)
+
+# Если GIF сообщает слишком маленькую
+# задержку — ограничиваем её
+duration = max(duration, 30)
+
+
+# ==========================================
+# ОБРАБОТКА
+# ==========================================
 
 frames = []
 
-
-# ==========================================
-# ОБРАБОТКА ВСЕХ КАДРОВ
-# ==========================================
-
-for frame_number in range(gif.n_frames):
+for number, frame in enumerate(
+    ImageSequence.Iterator(gif)
+):
 
     print(
-        f"⚙️ Обрабатываю кадр "
-        f"{frame_number + 1}/{gif.n_frames}"
+        f"⚙️ Кадр "
+        f"{number + 1}/{gif.n_frames}"
     )
 
-    gif.seek(frame_number)
+    # Каждый кадр независимо преобразуем
+    frame = frame.convert("RGB")
 
-    frame = gif.convert("RGB")
+    ascii_lines = convert_to_ascii(
+        frame
+    )
 
-    ascii_lines = frame_to_ascii(frame)
-
-    ascii_frame = create_ascii_frame(
+    ascii_image = make_ascii_image(
         ascii_lines
     )
 
-    frames.append(ascii_frame)
+    frames.append(ascii_image)
 
 
 # ==========================================
-# СОХРАНЯЕМ ASCII GIF
+# ПРОВЕРКА
 # ==========================================
 
-if not frames:
+if len(frames) == 0:
+
     raise RuntimeError(
-        "Не удалось создать кадры!"
+        "❌ Не удалось получить кадры GIF!"
     )
 
-print("💾 Сохраняю ASCII-анимацию...")
+
+# ==========================================
+# СОХРАНЕНИЕ
+# ==========================================
+
+print()
+print("💾 Создаю ascii.gif...")
 
 frames[0].save(
     OUTPUT_FILE,
@@ -177,14 +206,17 @@ frames[0].save(
     append_images=frames[1:],
     duration=duration,
     loop=0,
+    disposal=2,
     optimize=False
 )
+
 
 print()
 print("================================")
 print("✅ ГОТОВО!")
 print("================================")
-print("Исходная GIF:", INPUT_FILE)
-print("Результат:", OUTPUT_FILE)
-print("Кадров:", len(frames))
+print(f"Исходник: {INPUT_FILE}")
+print(f"Результат: {OUTPUT_FILE}")
+print(f"Кадров: {len(frames)}")
+print(f"Ширина ASCII: {WIDTH}")
 print("================================")
